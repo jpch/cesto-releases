@@ -1,0 +1,41 @@
+name: Publish
+
+# The cesto-android release job pushes incoming/<tag> (APK + NOTES.md) with a write deploy key.
+# This turns it into a GitHub release for Obtainium, tagged on main, then deletes the branch.
+on:
+  push:
+    branches: ["incoming/v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="${GITHUB_REF_NAME#incoming/}"
+          [[ "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "bad tag $tag"; exit 1; }
+          ls cesto-*.apk
+          sha256sum cesto-*.apk | tee sums.txt
+          {
+            echo "Signed APK of Cesto $tag (package app.cesto)."
+            echo
+            cat NOTES.md
+            echo
+            echo '```'; cat sums.txt; echo '```'
+          } > body.md
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release upload "$tag" cesto-*.apk --clobber
+          else
+            gh release create "$tag" cesto-*.apk --target main --title "Cesto $tag" --notes-file body.md
+          fi
+      - name: Delete the incoming branch
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X DELETE "repos/${GITHUB_REPOSITORY}/git/refs/heads/${GITHUB_REF_NAME}"
