@@ -3,7 +3,7 @@
 Alterações visíveis da app Cesto, da mais recente para a mais antiga.
 O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-PT/1.1.0/).
 
-## [Unreleased]
+## [Por publicar]
 
 ## [1.8.0] - 2026-11-03
 ### Adicionado
