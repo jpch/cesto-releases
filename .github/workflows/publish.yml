@@ -1,7 +1,8 @@
 name: Publish
 
-# The cesto-android release job pushes incoming/<tag> (APK + NOTES.md) with a write deploy key.
-# This turns it into a GitHub release for Obtainium, tagged on main, then deletes the branch.
+# The cesto-android release job pushes incoming/<tag> (APK, NOTES.md, README.public.md, CHANGELOG.md,
+# docs/screenshots/) with a write deploy key. This commits the product page to main, creates a GitHub
+# release for Obtainium tagged on main, then deletes the branch.
 on:
   push:
     branches: ["incoming/v*"]
@@ -14,26 +15,71 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-      - name: Create release
-        env:
-          GH_TOKEN: ${{ github.token }}
+        with:
+          fetch-depth: 0
+
+      - name: Stage incoming files
         run: |
           tag="${GITHUB_REF_NAME#incoming/}"
           [[ "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "bad tag $tag"; exit 1; }
+          echo "TAG=$tag" >> "$GITHUB_ENV"
+          stage="$RUNNER_TEMP/incoming"
+          echo "STAGE=$stage" >> "$GITHUB_ENV"
+          mkdir -p "$stage/docs/screenshots"
           ls cesto-*.apk
+          [ -f NOTES.md ] || { echo "NOTES.md missing"; exit 1; }
+          [ -f README.public.md ] || { echo "README.public.md missing"; exit 1; }
+          [ -f CHANGELOG.md ] || { echo "CHANGELOG.md missing"; exit 1; }
+          cp cesto-*.apk NOTES.md README.public.md CHANGELOG.md "$stage/"
+          cp docs/screenshots/*.png "$stage/docs/screenshots/" 2>/dev/null || true
+          # Every screenshot the README references must be present.
+          missing=0
+          for f in $(grep -oE 'docs/screenshots/[A-Za-z0-9._-]+\.png' README.public.md | sort -u); do
+            [ -f "$stage/$f" ] || { echo "missing: $f"; missing=1; }
+          done
+          # Defence in depth: public files must not reference the private repo or internals.
+          if grep -nE 'cesto-android|/api/v1|client_id' README.public.md CHANGELOG.md; then
+            echo "private reference in public docs"; missing=1
+          fi
+          exit "$missing"
+
+      - name: Commit product page to main
+        run: |
+          git checkout -q -B main origin/main
+          cp "$STAGE/README.public.md" README.md
+          cp "$STAGE/CHANGELOG.md" CHANGELOG.md
+          # Replace the published screenshot set so renamed or dropped screens do not linger.
+          rm -rf docs/screenshots
+          mkdir -p docs/screenshots
+          cp "$STAGE"/docs/screenshots/*.png docs/screenshots/
+          git add -A README.md CHANGELOG.md docs/screenshots
+          if git diff --cached --quiet; then
+            echo "Product page unchanged."
+          else
+            git -c user.name="João Henriques" -c user.email="1645240+jpch@users.noreply.github.com" \
+              commit -qm "docs: product page for $TAG"
+            git push origin main
+          fi
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        working-directory: ${{ runner.temp }}/incoming
+        run: |
           sha256sum cesto-*.apk | tee sums.txt
           {
-            echo "Signed APK of Cesto $tag (package app.cesto)."
+            echo "APK assinado do Cesto $TAG (pacote app.cesto)."
             echo
             cat NOTES.md
             echo
             echo '```'; cat sums.txt; echo '```'
           } > body.md
-          if gh release view "$tag" >/dev/null 2>&1; then
-            gh release upload "$tag" cesto-*.apk --clobber
+          if gh release view "$TAG" -R "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$TAG" cesto-*.apk --clobber -R "$GITHUB_REPOSITORY"
           else
-            gh release create "$tag" cesto-*.apk --target main --title "Cesto $tag" --notes-file body.md
+            gh release create "$TAG" cesto-*.apk -R "$GITHUB_REPOSITORY" --target main --title "Cesto $TAG" --notes-file body.md
           fi
+
       - name: Delete the incoming branch
         if: always()
         env:
