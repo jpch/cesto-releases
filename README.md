@@ -19,8 +19,12 @@ A app prepara o carrinho e mostra-o antes de o alterar, mas **nunca finaliza a c
 ## Instalação
 
 1. Instala o [Obtainium](https://github.com/ImranR98/Obtainium) e adiciona uma app com o URL `https://github.com/jpch/cesto-releases`. O Obtainium avisa quando há uma versão nova. Também podes descarregar o APK em [Releases](https://github.com/jpch/cesto-releases/releases).
-2. Na página do add-on Cesto no Home Assistant, abre «Ligar um telemóvel» e lê o código QR com a app. Em alternativa, usa «Procurar na rede» ou escreve os dados à mão.
-3. Para usar fora de casa (opcional), indica nas Definições, em «Acesso externo (HA)», o endereço externo do Home Assistant e um token de acesso de longa duração, de preferência de um utilizador sem permissões de administrador.
+2. Na página do add-on Cesto no Home Assistant, abre «Ligar um telemóvel» e lê o código QR com a app, no ecrã «Acesso local». Em alternativa, usa «Procurar na rede» ou escreve o endereço e o token à mão (sem porto, usa 8099).
+3. Para usar fora de casa (opcional), abre Definições › «Acesso remoto», indica o endereço externo do Home Assistant e um token de acesso de longa duração, de preferência de um utilizador sem permissões de administrador, e toca em «Guardar e testar».
+
+| | | |
+|:---:|:---:|:---:|
+| <img src="docs/screenshots/02-settings.png" width="220" alt="Definições"><br>Definições | <img src="docs/screenshots/02b-local-access.png" width="220" alt="Acesso local"><br>Acesso local | <img src="docs/screenshots/02c-remote-access.png" width="220" alt="Acesso remoto"><br>Acesso remoto |
 
 ## Como usar
 

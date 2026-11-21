@@ -5,6 +5,21 @@ O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-PT/1.1.0/).
 
 ## [Por publicar]
 
+## [1.9.3] - 2026-11-21
+### Alterado
+- Nas Definições, «Acesso local» e «Acesso remoto» abrem cada um o seu ecrã; saíram «Mudar de servidor» e «Token de acesso».
+- «Acesso local» (também o primeiro ecrã) tem só o que é preciso em casa: código QR, «Procurar na rede», endereço e token. Token em branco mantém o guardado.
+- «Acesso remoto» tem só o acesso fora de casa, com «Guardar e testar» e «Desligar acesso remoto».
+### Corrigido
+- Guardar o acesso remoto já não dá «Endereço inválido.» por causa do endereço local.
+- Cada erro aparece no campo a que se refere.
+- Um código QR sem porto passa a usar o porto 8099.
+- Se o add-on recusar o token guardado, «Acesso local» pede um token novo em vez de voltar a usar o antigo.
+- Um endereço novo (do add-on ou do Home Assistant) pede de novo o token; o token guardado só serve para o mesmo endereço.
+### Segurança
+- O endereço externo do Home Assistant tem de usar https:// e não pode ter utilizador, caminho nem parâmetros.
+- Os campos de token usam o teclado de palavra-passe, sem sugestões nem correção automática.
+
 ## [1.9.2] - 2026-11-21
 As versões 1.9.0 e 1.9.1 não chegaram a ser publicadas; a 1.9.2 traz as mesmas novidades.
 ### Adicionado
