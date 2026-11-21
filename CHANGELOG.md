@@ -5,6 +5,15 @@ O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-PT/1.1.0/).
 
 ## [Por publicar]
 
+## [1.9.2] - 2026-11-21
+As versões 1.9.0 e 1.9.1 não chegaram a ser publicadas; a 1.9.2 traz as mesmas novidades.
+### Adicionado
+- Preço por dose (add-on Cesto 2.0.4), por exemplo nos detergentes: «0,25 €/dose» e «Mais barato por dose».
+- «Leve X, pague Y» em «Procurar produto» nas promoções deste tipo.
+### Corrigido
+- Cada preço unitário aparece com a sua unidade (/kg, /L ou /dose); uma unidade desconhecida já não aparece como «/kg».
+- «Mais barato» só compara produtos com a mesma unidade (dose com dose).
+
 ## [1.8.0] - 2026-11-03
 ### Adicionado
 - Compatível com o add-on Cesto 2.0.0: a sessão do Continente passa a viver no add-on Continente MCP. Um indicador vermelho «Add-on Continente indisponível» (também nas Definições) avisa quando esse add-on não responde.

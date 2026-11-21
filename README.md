@@ -32,7 +32,7 @@ A app prepara o carrinho e mostra-o antes de o alterar, mas **nunca finaliza a c
 1. **Início.** Mostra o estado do servidor, do modo de teste e da sessão do Continente. Se a sessão expirou, «Iniciar sessão no Continente» abre a página do add-on Continente MCP.
 2. **«Lista de compras».** Escreve os artigos, um por linha e com quantidades (por exemplo, `2 kg batata`). Todos os telemóveis da casa veem a mesma lista; o que fizeres sem ligação é enviado na próxima sincronização.
 3. **«Procurar produto».** Escreve o nome ou usa a câmara para ler o código de barras ou o texto da embalagem. O produto vai para a lista, nunca diretamente para o carrinho.
-4. **«Preparar carrinho».** Confirma o produto de cada artigo, vê as promoções e as alternativas «Mais barato por litro/kg», pré-visualiza e confirma: podes juntar ao que já está no carrinho ou substituí-lo. Os artigos em falta aparecem no fim. Termina a compra na app ou no site do Continente («Carrinho no Continente»).
+4. **«Preparar carrinho».** Confirma o produto de cada artigo, vê as promoções e as alternativas «Mais barato por litro, kg ou dose», pré-visualiza e confirma: podes juntar ao que já está no carrinho ou substituí-lo. Os artigos em falta aparecem no fim. Termina a compra na app ou no site do Continente («Carrinho no Continente»).
 5. **«Produtos já enviados».** Seleciona produtos que já foram para o carrinho e volta a pô-los na lista.
 
 Fora de casa, a lista funciona sempre; o carrinho e as promoções funcionam quando a opção `remote_cart` está ligada no add-on Cesto.
